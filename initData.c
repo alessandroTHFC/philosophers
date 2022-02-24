@@ -1,0 +1,40 @@
+#include "philosopher.h"
+
+initPhilo(t_info *data);
+
+void	initData(t_info *data, char **av)
+{
+	memset(data, 0, sizeof(t_info));
+	data->philoTotal = atoi(av[1]);
+	data->die = atoi(av[2]);
+	data->eat = atoi(av[3]);
+	data->sleep = atoi(av[4]);
+	if(av[5])
+		data->meals = atoi(av[5]);
+	else
+		data->meals = -1;
+	pthread_mutex_init(&data->print);
+	pthread_mutex_init(&data->statusChkr);
+	initPhilo(data);
+}
+
+static void	initPhilo(t_info *data)
+{
+	data->philo = (t_philo *)malloc(data->philoTotal * sizeof(t_philo));
+	int	i = -1;
+	while(++i < data->philoTotal)
+	{
+		data->philo[i].data = data;
+		data->philo[i].xEaten = 0;
+		data->philo[i].numero = i + 1;
+		pthread_mutex_init(&data->philo[i].fork, NULL);
+		if (i = 0)
+			data->philo[i].sinistra = &data->philo[data->philoTotal - 1]
+		else
+			data->philo[i].sinistra = &data->philo[i - 1];
+		if (i + 1 = data->philoTotal)
+			data->philo[i].destra = &data->philo[0];
+		else
+			data->philo[i].destra = &data->philo[i + 1];
+	}
+}
