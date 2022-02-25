@@ -7,6 +7,7 @@ static bool	isInt(char *nb);
 int	main(int argc, char **av)
 {
 	t_info	data;
+
 	if (argChkr(argc, av))
 	{
 		initData(&data, av);
@@ -62,3 +63,5 @@ static bool	isInt(char *nb)
 		return (false);
 	return (true);
 }
+
+void	sieteAncoraVivi(
