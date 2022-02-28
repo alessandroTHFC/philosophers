@@ -1,6 +1,6 @@
 #include "philosopher.h"
 
-initPhilo(t_info *data);
+static void	initPhilo(t_info *data);
 
 void	initData(t_info *data, char **av)
 {
@@ -13,8 +13,8 @@ void	initData(t_info *data, char **av)
 		data->totalMeals = atoi(av[5]);
 	else
 		data->totalMeals = -1;
-	pthread_mutex_init(&data->print);
-	pthread_mutex_init(&data->statusChkr);
+	pthread_mutex_init(&data->print, NULL);
+	pthread_mutex_init(&data->statusChkr, NULL);
 	initPhilo(data);
 }
 
@@ -28,7 +28,7 @@ static void	initPhilo(t_info *data)
 		data->philo[i].xEaten = 0;
 		data->philo[i].numero = i + 1;
 		pthread_mutex_init(&data->philo[i].fork, NULL);
-		if (i + 1 = data->philoTotal)
+		if (i + 1 == data->philoTotal)
 			data->philo[i].destra = &data->philo[0];
 		else
 			data->philo[i].destra = &data->philo[i + 1];

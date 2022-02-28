@@ -1,4 +1,4 @@
-#include "philosophers.h"
+#include "philosopher.h"
 
 int atoi(const char *str)
 {
@@ -22,7 +22,7 @@ int atoi(const char *str)
 	return (value * posneg);
 }
 
-size_t	time(void)
+size_t	getTime(void)
 {
 	struct timeval	ora;
 	
@@ -30,21 +30,21 @@ size_t	time(void)
 	return((ora.tv_sec * 1000) + (ora.tv_usec / 1000));
 }
 
-void	lockedPrint(t_info *data, t_philo *philo, char *msg)
+void	lockedPrint(t_info *data, t_philo *philo, int msg)
 {
 		pthread_mutex_lock(&data->print);
-		size_t	timeStamp
+		size_t	timeStamp;
 
-		timeStamp = time() - data->startTime;
-		if (msg == "fork")
+		timeStamp = getTime() - data->startTime;
+		if (msg == 1)
 			printf("%lu Philosopher %i picked up a fork", timeStamp, philo->numero);
-		if (msg == "eating")
+		if (msg == 2)
 		{	
 			printf("%lu Philosopher %i is stuffing his fkn face", timeStamp, philo->numero);
 			philo->xEaten++;
 		}	
-		if (msg == "sleep")
+		if (msg == 3)
 			printf("%lu Philosopher %i is having a snooze", timeStamp, philo->numero);
-		if (msg == "think")
+		if (msg == 4)
 			printf("%lu Philosopher %i is pondering life", timeStamp, philo->numero);
 }

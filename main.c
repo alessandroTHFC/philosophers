@@ -19,12 +19,12 @@ int	main(int argc, char **av)
 static bool	argChkr(int argc, char **av)
 {
 	int	i = 0;
-	if (argc < 5 || > 7)
+	if (argc < 5 || argc > 7)
 	{
 		printf("Invalid number of arguments");
 		return(false);
 	}
-	if(av[1] < 2)
+	if(*av[1] < 2)
 	{
 		printf("Only 1 Philosopher? Stop wasting my time, he's just going to die anyway");
 	}
@@ -41,6 +41,7 @@ static bool	argChkr(int argc, char **av)
 			return (false);
 		}
 	}
+	return(true);
 }
 
 static bool	isValidNb(char *nb)
@@ -50,7 +51,7 @@ static bool	isValidNb(char *nb)
 	{
 		if (nb[i] == '-')
 			return (false);
-		if (!(nb[i] > '0' && nb[i] < '9'))
+		if (!(nb[i] >= '0' && nb[i] <= '9'))
 			return (false);
 	}
 	return (true);
@@ -58,10 +59,8 @@ static bool	isValidNb(char *nb)
 
 static bool	isInt(char *nb)
 {
-	long int	num = atoi(nb)
+	long int	num = atoi(nb);
 	if (num < -2147483648 || num > 2147483648)
 		return (false);
 	return (true);
 }
-
-void	sieteAncoraVivi(
