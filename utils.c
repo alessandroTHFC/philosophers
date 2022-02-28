@@ -37,14 +37,14 @@ void	lockedPrint(t_info *data, t_philo *philo, int msg)
 
 		timeStamp = getTime() - data->startTime;
 		if (msg == 1)
-			printf("%lu Philosopher %i picked up a fork", timeStamp, philo->numero);
+			printf("%lu Philosopher %i picked up a fork\n", timeStamp, philo->numero);
 		if (msg == 2)
 		{	
-			printf("%lu Philosopher %i is stuffing his fkn face", timeStamp, philo->numero);
+			printf("%lu Philosopher %i is stuffing his fkn face\n", timeStamp, philo->numero);
 			philo->xEaten++;
 		}	
 		if (msg == 3)
-			printf("%lu Philosopher %i is having a snooze", timeStamp, philo->numero);
+			printf("%lu Philosopher %i is having a snooze\n", timeStamp, philo->numero);
 		if (msg == 4)
-			printf("%lu Philosopher %i is pondering life", timeStamp, philo->numero);
+			printf("%lu Philosopher %i is pondering life\n", timeStamp, philo->numero);
 }
