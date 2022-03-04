@@ -22,7 +22,7 @@ int atoi(const char *str)
 	return (value * posneg);
 }
 
-size_t	getTime(void)
+int	getTime(void)
 {
 	struct timeval	ora;
 	
@@ -47,4 +47,32 @@ void	lockedPrint(t_info *data, t_philo *philo, int msg)
 			printf("%lu Philosopher %i is having a snooze\n", timeStamp, philo->numero);
 		if (msg == 4)
 			printf("%lu Philosopher %i is pondering life\n", timeStamp, philo->numero);
+		pthread_mutex_unlock(&data->print);
+		if (msg == 5)
+			printf("philo %i picks up the the fork of philo %i\n", philo->numero, philo->destra->numero);
+}
+
+void	exit_free(t_info *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->philoTotal)
+		pthread_mutex_destroy(&data->philo[i].fork);
+	pthread_mutex_destroy(&data->print);
+	i = data->philoTotal - 1;
+	free(data->philo);
+	exit(0);
+}
+
+int	compare(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	if (n == 0)
+		return (0);
+	while (s1[i] != '\0' && s1[i] == s2[i] && i < n - 1)
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

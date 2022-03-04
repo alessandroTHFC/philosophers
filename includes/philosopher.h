@@ -13,10 +13,12 @@ typedef struct	s_philo
 {
 	int				numero;
 	int				xEaten;
-	size_t				lastMeal;
+	int				lastMeal;
 	struct s_info			*data;
 	struct	s_philo			*destra;
 	pthread_mutex_t fork;
+	pthread_t				thread;
+	pthread_t				checker;
 }	t_philo;
 
 typedef	struct	s_info
@@ -24,14 +26,13 @@ typedef	struct	s_info
 	int				philoTotal;
 	int				die;
 	int				eat;
-	size_t				sleep;
+	int				sleep;
 	int				totalMeals;
-	size_t			startTime;
+	int			startTime;
 	bool			finishedEating;
-	int				morto;
+	bool				morto;
 	t_philo				*philo;
-	pthread_mutex_t	print;
-	pthread_mutex_t	statusChkr;
+	pthread_mutex_t		print;
 }	t_info;
 
 //initData.c
@@ -42,7 +43,11 @@ void	threadGenesis(t_info *data);
 
 //utils.c
 int	atoi(const char *str);
-size_t	getTime(void);
+int	getTime(void);
 void	lockedPrint(t_info *data, t_philo *philo, int msg);
+void	exit_free(t_info *data);
+int	compare(const char *s1, const char *s2, size_t n);
 
+//main.c
+void	*status(void *philosopher);
 #endif

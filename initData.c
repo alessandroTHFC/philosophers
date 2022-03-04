@@ -14,7 +14,6 @@ void	initData(t_info *data, char **av)
 	else
 		data->totalMeals = -1;
 	pthread_mutex_init(&data->print, NULL);
-	pthread_mutex_init(&data->statusChkr, NULL);
 	initPhilo(data);
 }
 
