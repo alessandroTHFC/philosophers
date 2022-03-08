@@ -5,6 +5,11 @@ static void	getForked(t_philo *philo, t_info *data);
 static void	dinnerTime(t_philo *philo, t_info *data);
 static void	sleepNcontemplation(t_philo *philo, t_info *data);
 
+
+//Create the threads passing in each philosophers internal pthread_t 'thread' and one called 'checker'
+//the thread will act as the philosopher, and the checker will monitor that particular thread.
+//the checker thread is also detached after. Each philo thread will execute the code stored at the
+//address of lifestyle function while the checker threads will be running the status function.
 void	threadGenesis(t_info *data)
 {
 	int	i = -1;
@@ -18,6 +23,10 @@ void	threadGenesis(t_info *data)
 
 }
 
+//The lifestyle function will serve as the metaphorical lifecyle of the philosopher, containing its
+//routine of eating, sleeping, thinking. To provide an offset of the philosophers, there is an if
+//statement seperate into odd and even by % 2. This small sleep means that if we have 4 philosophers,
+//1 and 3 will go into eat first so as to avoid them from getting gridlocked. 
 static void	*lifecycle(void *philosopher)
 {
 	t_philo	*philo;
@@ -28,42 +37,51 @@ static void	*lifecycle(void *philosopher)
 	philo->lastMeal = getTime();
 	if(philo->numero % 2 == 0)
 		usleep(5);
-	//printf("p%i last meal set as %i\n", philo->numero, philo->lastMeal);	
 	while(!data->morto && !data->finishedEating)
 	{
 		getForked(philo, data);
 		dinnerTime(philo, data);
 		sleepNcontemplation(philo, data);
-		//printf("(p%i) morto %i and finished %i xEaten is %i\n", philo->numero, data->morto, data->finishedEating, philo->xEaten);
 	}
 	return(NULL);
 }
 
+//A small function for the philosophers to pick up their metaphorical forks, the philosopher will enter this
+//function, encounter the first locking of the mutex found at the address of philo->fork, then executing the
+//locked printing function to print the successful picking up (locking the fock) of the fork. It will then 
+//access the mutex_t variable fork of the philosopher to his right by using the pointer that contains to that
+//address and lock it. Finally, executing lock print again to confirm the lock. 
 static void getForked(t_philo *philo, t_info *data)
 {
-	//printf("@@@@@philo %i enters xEaten is %i\n", philo->numero, philo->xEaten);
 	pthread_mutex_lock(&philo->fork);
 	lockedPrint(data, philo, 1);
 	pthread_mutex_lock(&philo->destra->fork);
 	lockedPrint(data, philo, 5);
 }
 
+//This function replicates the eating stage of the philosophers lifecyle, after exiting the previous function, 
+//both mutex_t variable forks had been locked at which point, upon enter this code block, the locked print
+//function is called to print the eating message. After this, the lastMeal variable is set with a time value
+//returned from getTime, usleep is then called to the time duration provided time_to_eat. It is at this point
+//that the two mutex variables can be unlocked. A final if statement to check if the time eaten are equal 
+//to total meals, setting the bool variable finished eating to true.
 static void dinnerTime(t_philo *philo, t_info *data)
 {
 	lockedPrint(data, philo, 2);
 	philo->lastMeal = getTime();
-	//printf("philo %i lastMeal @ %i\n", philo->numero, philo->lastMeal);
 	usleep(data->eat * 1000);
-	//printf("this is xEaten increasing %i\n", philo->xEaten++);
 	pthread_mutex_unlock(&philo->fork);
-	//printf(">>>>>p%i has put down his fork\n", philo->numero);
 	pthread_mutex_unlock(&philo->destra->fork);
-	//printf(">>>p%i has put down p%is fork\n", philo->numero, philo->destra->numero);
-	//printf("totalMeals = %i and p%i has eaten %i times\n", data->totalMeals, philo->numero, philo->xEaten);
 	if (philo->xEaten == data->totalMeals)
 		data->finishedEating = true;
 }
-
+//This function acts as the sleeping and thinking part of the lifecycle.
+//If the philosopher is imagined as sleeping, upon execution, the variable current is given a time value
+//this is to represent a timer, when the philosopher closes his eyes and begins sleeping. A print function
+//then prints the philosophers sleeping status. At this point, while nothing is dead, there is a loop designed
+//to essentially keep the thread asleep for the duration of time_to_sleep. while minusing value of the time philo
+//closes his eyes from the current time, each iteration of the loop, is less it will keep sleeping. until finally
+//breaking once the sleep duration is greater than or equal to. This then triggers the print message of thinking.
 static void sleepNcontemplation(t_philo *philo, t_info *data)
 {
 	int	current;

@@ -13,13 +13,16 @@ int	main(int argc, char **av)
 	if(argChkr(argc, av) == false)
 		exit(1);
 	initData(&data, av);
-		//printf("die is %i, eat %i, sleep %i, morto %i\n", data.die, data.eat, data.sleep, data.morto);
 	threadGenesis(&data);
 	while(++i < data.philoTotal)
 			pthread_join(data.philo[i].thread, NULL);
 	exit_free(&data);
 	return(0);
 }
+
+//argChkr
+//returns error message if there is only one philo, if its not a valid number, a valid integer, or not between 5-7
+//arguments.
 
 static bool	argChkr(int argc, char **av)
 {
@@ -84,6 +87,12 @@ static bool	isInt(char *nb)
 	return (true);
 }
 
+//Status function
+//called at creating of checking thread that monitors the status of each philo thread
+//while there the philosophers are alive and not finished eating, it checks the current time
+//against the time of the last meal and whether that is greater than the time to die. At which point
+//bool value indicating death is set to true, which will cause the lifestyle function to end its while loop
+
 void	*status(void *philosopher)
 {
 	t_philo *philo;
@@ -95,8 +104,6 @@ void	*status(void *philosopher)
 	{
 		if ((getTime() - philo->lastMeal) > data->die)
 		{	
-			//printf("time %i - %i lstM > %i die\n", getTime(), philo->lastMeal, data->die);
-			//printf("%i is dying lastMeal @ %i is greater than %i\n", philo->numero, philo->lastMeal, data->die);
 			data->morto = true;
 		}	
 	}

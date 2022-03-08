@@ -6,7 +6,7 @@ all: $(NAME)
 
 $(NAME):
 	@gcc $(FLAGS) $(SRCS) -o $(NAME)
-
+	@echo --Making Philosophers--
 clean:
 	rm -f $(NAME)
 
