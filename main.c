@@ -1,60 +1,62 @@
 #include "philosopher.h"
 
-static bool	argChkr(int argc, char **av);
-static bool	isValidNb(char *nb);
-static bool	isInt(char *nb);
+static bool	arg_chkr(int argc, char **av);
+static bool	is_valid_nb(char *nb);
+static bool	is_int(char *nb);
 
 int	main(int argc, char **av)
 {
-	t_info	data;
 	int	i;
-	i = 0;
+	t_info	data;
 
-	if(argChkr(argc, av) == false)
+	i = 0;
+	if (arg_chkr(argc, av) == false)
 		exit(1);
-	initData(&data, av);
-	threadGenesis(&data);
-	while(++i < data.philoTotal)
-			pthread_join(data.philo[i].thread, NULL);
+	init_data(&data, av);
+	thread_genesis(&data);
+	while (++i < data.philo_total)
+		pthread_join(data.philo[i].thread, NULL);
 	exit_free(&data);
-	return(0);
+	return (0);
 }
 
 //argChkr
 //returns error message if there is only one philo, if its not a valid number, a valid integer, or not between 5-7
 //arguments.
 
-static bool	argChkr(int argc, char **av)
+static bool	arg_chkr(int argc, char **av)
 {
-	int	i = 0;
+	int	i;
+
+	i = 0;
 	if (argc < 5 || argc > 7)
 	{
 		printf("Invalid number of arguments\n");
-		return(false);
+		return (false);
 	}
-	if(*av[1] < '2')
-	{
+	if (*av[1] < '2')
 		printf("Only 1 Philosopher? Stop wasting my time, he's just going to die anyway\n");
-	}
 	while (av[++i])
 	{
-		if (!isValidNb(av[i]))
+		if (!is_valid_nb(av[i]))
 		{
 			printf("Invalid argument included, either not a number or less than 1\n");
 			return (false);
 		}
-		if (!isInt(av[i]))
+		if (!is_int(av[i]))
 		{
 			printf("Argument not within the integer range\n");
 			return (false);
 		}
 	}
-	return(true);
+	return (true);
 }
 
-static bool	isValidNb(char *nb)
+static bool	is_valid_nb(char *nb)
 {
-	int	i = -1;
+	int	i;
+
+	i = -1;
 	while (nb[++i])
 	{
 		if (nb[i] == '-')
@@ -75,7 +77,7 @@ int	length(char *s)
 	return (i);
 }
 
-static bool	isInt(char *nb)
+static bool	is_int(char *nb)
 {
 	int	len;
 
@@ -95,17 +97,15 @@ static bool	isInt(char *nb)
 
 void	*status(void *philosopher)
 {
-	t_philo *philo;
+	t_philo	*philo;
 	t_info	*data;
+
 	philo = (t_philo *)philosopher;
 	data = philo->data;
-
-	while(!data->morto && !data->finishedEating)
+	while (!data->morto && !data->finished_eating)
 	{
-		if ((getTime() - philo->lastMeal) > data->die)
-		{	
+		if ((get_time() - philo->last_meal) > data->die)
 			data->morto = true;
-		}	
 	}
-	return(NULL);
+	return (NULL);
 }

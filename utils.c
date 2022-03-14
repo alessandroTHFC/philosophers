@@ -1,9 +1,9 @@
 #include "philosopher.h"
 
-int atoi(const char *str)
+int	atoi(const char *str)
 {
-	int value;
-	int posneg;
+	int	value;
+	int	posneg;
 
 	value = 0;
 	posneg = 1;
@@ -22,34 +22,34 @@ int atoi(const char *str)
 	return (value * posneg);
 }
 
-int	getTime(void)
+int	get_time(void)
 {
 	struct timeval	ora;
-	
+
 	gettimeofday(&ora, NULL);
-	return((ora.tv_sec * 1000) + (ora.tv_usec / 1000));
+	return ((ora.tv_sec * 1000) + (ora.tv_usec / 1000));
 }
 
-void	lockedPrint(t_info *data, t_philo *philo, int msg)
+void	locked_print(t_info *data, t_philo *philo, int msg)
 {
-		pthread_mutex_lock(&data->print);
-		size_t	timeStamp;
+	size_t	time_stamp;
 
-		timeStamp = getTime() - data->startTime;
-		if (msg == 1)
-			printf("%lu Philosopher %i picked up a fork\n", timeStamp, philo->numero);
-		if (msg == 2)
-		{	
-			printf("%lu Philosopher %i is stuffing his fkn face\n", timeStamp, philo->numero);
-			philo->xEaten++;
-		}	
-		if (msg == 3)
-			printf("%lu Philosopher %i is having a snooze\n", timeStamp, philo->numero);
-		if (msg == 4)
-			printf("%lu Philosopher %i is pondering life\n", timeStamp, philo->numero);
-		pthread_mutex_unlock(&data->print);
-		if (msg == 5)
-			printf("philo %i picks up the the fork of philo %i\n", philo->numero, philo->destra->numero);
+	pthread_mutex_lock(&data->print);
+	time_stamp = get_time() - data->start_time;
+	if (msg == 1)
+		printf("%lu Philosopher %i picked up a fork\n", time_stamp, philo->numero);
+	if (msg == 2)
+	{
+		printf("%lu Philosopher %i is stuffing his fkn face\n", time_stamp, philo->numero);
+			philo->xeaten++;
+	}
+	if (msg == 3)
+		printf("%lu Philosopher %i is having a snooze\n", time_stamp, philo->numero);
+	if (msg == 4)
+		printf("%lu Philosopher %i is pondering life\n", time_stamp, philo->numero);
+	if (msg == 5)
+		printf("%lu Philosopher %i picks up the the fork of philo %i\n", time_stamp, philo->numero, philo->destra->numero);
+	pthread_mutex_unlock(&data->print);
 }
 
 void	exit_free(t_info *data)
@@ -57,10 +57,10 @@ void	exit_free(t_info *data)
 	int	i;
 
 	i = -1;
-	while (++i < data->philoTotal)
+	while (++i < data->philo_total)
 		pthread_mutex_destroy(&data->philo[i].fork);
 	pthread_mutex_destroy(&data->print);
-	i = data->philoTotal - 1;
+	i = data->philo_total - 1;
 	free(data->philo);
 	exit(0);
 }
