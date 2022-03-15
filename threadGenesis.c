@@ -92,7 +92,7 @@ static void	sleep_n_contemplation(t_philo *philo, t_info *data)
 	locked_print(data, philo, 3);
 	while (!data->morto)
 	{
-		if (getTime() - current >= data->sleep)
+		if (get_time() - current >= data->sleep)
 			break ;
 		usleep(500);
 	}
