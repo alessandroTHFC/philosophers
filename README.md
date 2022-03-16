@@ -1,7 +1,7 @@
 # philosophers
 Introduction into Threading and Mutex
 
-The project is run using make followed by ./philosophers <Number of philosophers> <Time to Die> <Time to Eat> <Time to Sleep> <(optional) Times to Eat>
+The project is run using make followed by ./philosophers (Number of philosophers) (Time to Die) (Time to Eat) (Time to Sleep) <(optional) Times to Eat>
 E.g. ./philosophers 4 500 100 100 
 The expected output of which would be an endless looping of the program as the arguments dont allow for the philosophers to die.
   
