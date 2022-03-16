@@ -36,7 +36,7 @@ static void	*lifecycle(void *philosopher)
 	data = philo->data;
 	philo->last_meal = get_time();
 	if (philo->numero % 2 == 0)
-		usleep(5);
+		usleep(data->eat / 2);
 	while (!data->morto && !data->finished_eating)
 	{
 		get_forked(philo, data);
