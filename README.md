@@ -1,5 +1,5 @@
 # philosophers
-introduction into threading and mutex
+Introduction into Threading and Mutex
 
 The project is run using make followed by ./philosophers <Number of philosophers> <Time to Die> <Time to Eat> <Time to Sleep> <(optional) Times to Eat>
 E.g. ./philosophers 4 500 100 100 
