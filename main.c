@@ -105,7 +105,10 @@ void	*status(void *philosopher)
 	while (!data->morto && !data->finished_eating)
 	{
 		if ((get_time() - philo->last_meal) > data->die)
+		{	
 			data->morto = true;
+			locked_print(data, philo, 6);
+		}
 	}
 	return (NULL);
 }

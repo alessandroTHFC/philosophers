@@ -49,6 +49,8 @@ void	locked_print(t_info *data, t_philo *philo, int msg)
 		printf("%lu Philosopher %i is pondering life\n", time_stamp, philo->numero);
 	if (msg == 5)
 		printf("%lu Philosopher %i picks up the the fork of philo %i\n", time_stamp, philo->numero, philo->destra->numero);
+	if (msg == 6)
+		printf("%lu Philosopher %i has died\n", time_stamp, philo->numero);
 	pthread_mutex_unlock(&data->print);
 }
 

@@ -36,7 +36,7 @@ static void	*lifecycle(void *philosopher)
 	data = philo->data;
 	philo->last_meal = get_time();
 	if (philo->numero % 2 == 0)
-		usleep(5);
+		usleep(500);
 	while (!data->morto && !data->finished_eating)
 	{
 		get_forked(philo, data);
@@ -70,7 +70,7 @@ static void	dinner_time(t_philo *philo, t_info *data)
 {
 	locked_print(data, philo, 2);
 	philo->last_meal = get_time();
-	usleep(data->eat * 1000);
+	usleep(data->eat);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->destra->fork);
 	if (philo->xeaten == data->total_meals)
