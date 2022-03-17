@@ -71,6 +71,7 @@ static void	dinner_time(t_philo *philo, t_info *data)
 {
 	locked_print(data, philo, 2);
 	usleep(data->eat * 1000);
+	philo->xeaten++;
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->destra->fork);
 	if (philo->xeaten == data->total_meals)
