@@ -35,7 +35,7 @@ static bool	arg_chkr(int argc, char **av)
 		return (false);
 	}
 	if (*av[1] < '2')
-		printf("Only 1 Philosopher? Stop wasting my time, he's just going to die anyway\n");
+		printf("Philosopher 1 picks up his fork\nPhilosopher 1 has died\n");
 	while (av[++i])
 	{
 		if (!is_valid_nb(av[i]))
@@ -104,8 +104,12 @@ void	*status(void *philosopher)
 	data = philo->data;
 	while (!data->morto && !data->finished_eating)
 	{
-		if ((get_time() - philo->last_meal) > data->die)
+		if ((get_time() - philo->last_meal) >= data->die)
+		{	
 			data->morto = true;
+			locked_print(data, philo, 6);
+			exit(1);
+		}
 	}
 	return (NULL);
 }
