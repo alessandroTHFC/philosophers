@@ -36,11 +36,7 @@ static void	*lifecycle(void *philosopher)
 	data = philo->data;
 	philo->last_meal = get_time();
 	if (philo->numero % 2 == 0)
-<<<<<<< HEAD
 		usleep(500);
-=======
-		usleep(data->eat / 2);
->>>>>>> 931cb80696917de42f67b27ecc4b3178328974aa
 	while (!data->morto && !data->finished_eating)
 	{
 		get_forked(philo, data);
@@ -60,6 +56,7 @@ static void	get_forked(t_philo *philo, t_info *data)
 	pthread_mutex_lock(&philo->fork);
 	locked_print(data, philo, 1);
 	pthread_mutex_lock(&philo->destra->fork);
+	philo->last_meal = get_time();
 	locked_print(data, philo, 5);
 }
 
@@ -73,8 +70,7 @@ static void	get_forked(t_philo *philo, t_info *data)
 static void	dinner_time(t_philo *philo, t_info *data)
 {
 	locked_print(data, philo, 2);
-	philo->last_meal = get_time();
-	usleep(data->eat);
+	usleep(data->eat * 1000);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->destra->fork);
 	if (philo->xeaten == data->total_meals)
@@ -94,11 +90,6 @@ static void	sleep_n_contemplation(t_philo *philo, t_info *data)
 
 	current = get_time();
 	locked_print(data, philo, 3);
-	while (!data->morto)
-	{
-		if (get_time() - current >= data->sleep)
-			break ;
-		usleep(500);
-	}
+	usleep(data->sleep * 1000);
 	locked_print(data, philo, 4);
 }
