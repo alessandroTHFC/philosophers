@@ -10,7 +10,8 @@ $(NAME):
 clean:
 	rm -f $(NAME)
 
-fclean: clean
-	rm -f $(NAME)
+fclean:
+	@rm -f $(NAME)
+	@echo --Clean As A Whistle--
 
 re: fclean all

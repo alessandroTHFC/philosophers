@@ -1,115 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apangraz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/20 16:32:23 by apangraz          #+#    #+#             */
+/*   Updated: 2022/03/22 12:27:18 by apangraz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
-static bool	arg_chkr(int argc, char **av);
-static bool	is_valid_nb(char *nb);
-static bool	is_int(char *nb);
+static void	check_death(t_info *data);
+static void	genesis(t_info *data);
 
 int	main(int argc, char **av)
 {
-	int	i;
+	int		i;
 	t_info	data;
 
-	i = 0;
+	i = -1;
 	if (arg_chkr(argc, av) == false)
 		exit(1);
 	init_data(&data, av);
-	thread_genesis(&data);
+	data.start_time = get_time();
+	genesis(&data);
+	status(&data);
 	while (++i < data.philo_total)
 		pthread_join(data.philo[i].thread, NULL);
 	exit_free(&data);
 	return (0);
 }
 
-//argChkr
-//returns error message if there is only one philo, if its not a valid number, a valid integer, or not between 5-7
-//arguments.
-
-static bool	arg_chkr(int argc, char **av)
-{
-	int	i;
-
-	i = 0;
-	if (argc < 5 || argc > 7)
-	{
-		printf("Invalid number of arguments\n");
-		return (false);
-	}
-	if (*av[1] < '2')
-		printf("Philosopher 1 picks up his fork\nPhilosopher 1 has died\n");
-	while (av[++i])
-	{
-		if (!is_valid_nb(av[i]))
-		{
-			printf("Invalid argument included, either not a number or less than 1\n");
-			return (false);
-		}
-		if (!is_int(av[i]))
-		{
-			printf("Argument not within the integer range\n");
-			return (false);
-		}
-	}
-	return (true);
-}
-
-static bool	is_valid_nb(char *nb)
+static void	genesis(t_info *data)
 {
 	int	i;
 
 	i = -1;
-	while (nb[++i])
+	while (++i < data->philo_total)
 	{
-		if (nb[i] == '-')
-			return (false);
-		if (!(nb[i] >= '0' && nb[i] <= '9'))
-			return (false);
+		pthread_create(&data->philo[i].thread, NULL,
+			&lifecycle, &data->philo[i]);
+		data->philo[i].last_meal = data->start_time;
 	}
-	return (true);
 }
 
-int	length(char *s)
+void	status(t_info *data)
+{
+	while (!data->finished_eating && !data->dead)
+		check_death(data);
+}
+
+static void	check_death(t_info *data)
 {
 	int	i;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-static bool	is_int(char *nb)
-{
-	int	len;
-
-	len = length(nb);
-	if (len < 10)
-		return (true);
-	if (len > 10 || compare(nb, "2147483648", 10) >= 0)
-		return (false);
-	return (true);
-}
-
-//Status function
-//called at creating of checking thread that monitors the status of each philo thread
-//while there the philosophers are alive and not finished eating, it checks the current time
-//against the time of the last meal and whether that is greater than the time to die. At which point
-//bool value indicating death is set to true, which will cause the lifestyle function to end its while loop
-
-void	*status(void *philosopher)
-{
-	t_philo	*philo;
-	t_info	*data;
-
-	philo = (t_philo *)philosopher;
-	data = philo->data;
-	while (!data->morto && !data->finished_eating)
+	i = -1;
+	while (!data->dead && ++i < data->philo_total)
 	{
-		if ((get_time() - philo->last_meal) >= data->die)
-		{	
-			data->morto = true;
-			locked_print(data, philo, 6);
-			exit(1);
+		if (get_time() - data->philo[i].last_meal >= data->die)
+		{
+			data->dead = true;
+			locked_print(data, data->philo, 6);
+			exit_free(data);
 		}
 	}
-	return (NULL);
 }

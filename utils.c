@@ -1,26 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: apangraz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/20 16:32:23 by apangraz          #+#    #+#             */
+/*   Updated: 2022/03/22 12:22:38 by apangraz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
-
-int	atoi(const char *str)
-{
-	int	value;
-	int	posneg;
-
-	value = 0;
-	posneg = 1;
-	while (*str == '\f' || *str == '\r' || *str == '\n'
-		|| *str == '\t' || *str == '\v' || *str == ' ')
-		str++;
-	if (*str == '-')
-		posneg = -1;
-	if (*str == '-' || *str == '+')
-		str++;
-	while (*str >= '0' && *str <= '9')
-	{
-		value = (value * 10) + (*str - '0');
-		str++;
-	}
-	return (value * posneg);
-}
 
 int	get_time(void)
 {
@@ -36,22 +26,40 @@ void	locked_print(t_info *data, t_philo *philo, int msg)
 
 	pthread_mutex_lock(&data->print);
 	time_stamp = get_time() - data->start_time;
-	if (msg == 1)
-		printf("%lu Philosopher %i picked up a fork\n", time_stamp, philo->numero);
-	if (msg == 2)
-	{
-		printf("%lu Philosopher %i is stuffing his fkn face\n", time_stamp, philo->numero);
-			philo->xeaten++;
+	if (!data->dead)
+	{	
+		if (msg == 1)
+			printf("%lu Philosopher %i picked up a fork\n",
+				time_stamp, philo->number);
+		if (msg == 2)
+			printf("%lu Philosopher %i is stuffing his fkn face\n",
+				time_stamp, philo->number);
+		if (msg == 3)
+			printf("%lu Philosopher %i is having a snooze\n",
+				time_stamp, philo->number);
+		if (msg == 4)
+			printf("%lu Philosopher %i is pondering life\n",
+				time_stamp, philo->number);
+		if (msg == 5)
+			printf("%lu Philosopher %i picks up the the fork of philo %i\n",
+				time_stamp, philo->number, philo->destra->number);
 	}
-	if (msg == 3)
-		printf("%lu Philosopher %i is having a snooze\n", time_stamp, philo->numero);
-	if (msg == 4)
-		printf("%lu Philosopher %i is pondering life\n", time_stamp, philo->numero);
-	if (msg == 5)
-		printf("%lu Philosopher %i picks up the the fork of philo %i\n", time_stamp, philo->numero, philo->destra->numero);
 	if (msg == 6)
-		printf("%lu Philosopher %i has died\n", time_stamp, philo->numero);
+		printf("%lu Philosopher %i is dead\n", time_stamp, philo->number);
 	pthread_mutex_unlock(&data->print);
+}
+
+void	custom_usleep(t_info *data, int time)
+{
+	int	current;
+
+	current = get_time();
+	while (!(data->dead))
+	{
+		if (get_time() - current >= time)
+			break ;
+		usleep(100);
+	}
 }
 
 void	exit_free(t_info *data)
@@ -62,19 +70,7 @@ void	exit_free(t_info *data)
 	while (++i < data->philo_total)
 		pthread_mutex_destroy(&data->philo[i].fork);
 	pthread_mutex_destroy(&data->print);
-	i = data->philo_total - 1;
+	pthread_mutex_destroy(&data->aux);
 	free(data->philo);
 	exit(0);
-}
-
-int	compare(const char *s1, const char *s2, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	if (n == 0)
-		return (0);
-	while (s1[i] != '\0' && s1[i] == s2[i] && i < n - 1)
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

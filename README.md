@@ -19,6 +19,3 @@ All the various mutex functions(pthread_mutex_init, pthread_mutex_lock, pthread_
 Also
 Bare in mind the threads need to be delayed upon entering the function included when creating its thread. Offset them! 
 Timing is extremely crucial in this project to the almost anal degree. Slightest mistiming just ruins everything. 
-I chose to create a secondary thread per philosopher thread to monitor each philosopher thread, i've seen others just have one function in the main process that monitors the various philo struct values.
-Potential issue with this is that it would need to loop through each philo struct checking each value, if there are lots of philo's this could cause an issue because philo one could die, 
-but the program is looking at philo 8 when 1 dies so for the sake of timing it could realise the philo is dead too late. Food for thought.
