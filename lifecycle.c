@@ -6,7 +6,7 @@
 /*   By: apangraz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 16:32:23 by apangraz          #+#    #+#             */
-/*   Updated: 2022/03/22 12:19:17 by apangraz         ###   ########.fr       */
+/*   Updated: 2022/03/22 15:13:55 by apangraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	*lifecycle(void *philosopher)
 		dinner_time(philo);
 		sleep_n_contemplation(philo);
 	}
+	if (philo->xeaten == data->total_meals)
+		data->finished_eating = true;
 	return (NULL);
 }
 

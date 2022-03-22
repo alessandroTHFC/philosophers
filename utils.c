@@ -6,7 +6,7 @@
 /*   By: apangraz <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 16:32:23 by apangraz          #+#    #+#             */
-/*   Updated: 2022/03/22 12:22:38 by apangraz         ###   ########.fr       */
+/*   Updated: 2022/03/22 15:13:18 by apangraz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	locked_print(t_info *data, t_philo *philo, int msg)
 			printf("%lu Philosopher %i picks up the the fork of philo %i\n",
 				time_stamp, philo->number, philo->destra->number);
 	}
-	if (msg == 6)
+	if (msg == 6 && !data->finished_eating)
 		printf("%lu Philosopher %i is dead\n", time_stamp, philo->number);
 	pthread_mutex_unlock(&data->print);
 }
