@@ -20,6 +20,12 @@ int	get_time(void)
 	return ((ora.tv_sec * 1000) + (ora.tv_usec / 1000));
 }
 
+//locked print
+//The printing function used for the program, upon entering this function, it gets locked using the print mutex
+//this prevents multiple threads trying to enter this function and printing messages at the same time which could 
+//cause unpredictable behaviours. I included the if(!dead) condition as, i was encountering a problem that
+//even after a philosopher had died, messages were still being printed at the exact time of death or very close to
+//that time. 
 void	locked_print(t_info *data, t_philo *philo, int msg)
 {
 	size_t	time_stamp;

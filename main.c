@@ -15,6 +15,19 @@
 static void	check_death(t_info *data);
 static void	genesis(t_info *data);
 
+//Main Function
+//The main works by first checking the validity of the arguments supplied, must be valid number.
+//(within interger range and not negative) Arguments need to be either 5 or 6 depending if total meals is supplied.
+//calls init_data which initialises the main "data" struct that contains the arguments aswell as a few other values
+//needed for the program to run, e.g. finished_eating, dead, aswell as a pointer to the philo struct and the mutex
+//for printing. Each Philo struct contain an ID number, times eaten value, a time value of when they last ate.
+//Aswell as a pointer back to the data struct, a pointer to the philosopher to his right, his mutex fork and his
+//pthread_t thread. A start time is then set, right before genesis is called which uses pthread_create. At which
+//point the threads will essentially branch off and begin their work executing the lifecycle function. In the mean
+//time, the main process will have exited genesis and entered into the status function where it will remain, until
+//something causes it to break its loop. I.E finished eating or dead. If the philo dies, it will exit directly
+//from within the check_dead function. 
+
 int	main(int argc, char **av)
 {
 	int		i;
@@ -32,6 +45,11 @@ int	main(int argc, char **av)
 	exit_free(&data);
 	return (0);
 }
+
+//genesis function
+//while i is less than total philosophers it will create the thread stored inside each philo struct, executing
+//the code stored at the function pointer, using the respective philo struct as its parameter. At which point, 
+//the time of said philosophers last meal will be set to the start time, otherwise it won't work properly. 
 
 static void	genesis(t_info *data)
 {
